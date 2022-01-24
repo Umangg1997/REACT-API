@@ -1,23 +1,25 @@
-import react,{useState,useEffect} from "react"
+
+
+import { useQuery } from "react-query"
 import axios from "axios"
 
-export function Data() {
-    const[post,setPost] = useState([])
-    const getData = () => {
-        axios.get('https://jsonplaceholder.typicode.com/posts')
-        .then((response) => {
-            console.log('Response')
-            const myData = response.data
-            setPost(myData)
-        })
+const fetchData = () => {
+    return axios.get(' https://jsonplaceholder.typicode.com/posts')
+}
+export const Data = () => {
+    const { data, isLoading } = useQuery('posts',fetchData)
+
+    if (isLoading) {
+        return <h2> Loading Data.. </h2>
     }
-    useEffect(() => getData(),[])  
-    return(
+
+    return (
+        <>
         <div>
-            {post.map((posts,index) =>(
-                <div key = {index}>id = {posts.id}: title : {posts.title}</div>
+            {data?.data.map((user,index) => (
+                <div key = {index}>title = {user.title}</div>
             ))}
         </div>
+        </>
     )
-}
-
+} 
